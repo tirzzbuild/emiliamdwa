@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emilia MD - Advanced WhatsApp Bot Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        emilia: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            200: '#ddd6fe',
+                            300: '#c4b5fd',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            800: '#5b21b6',
+                            900: '#4c1d95',
+                            950: '#2e1065',
+                        },
+                        crystal: {
+                            light: '#f1f5f9',
+                            DEFAULT: '#cbd5e1',
+                            dark: '#0f172a',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'glow': 'glow 3s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        },
+                        glow: {
+                            '0%': { opacity: '0.6', filter: 'drop-shadow(0 0 15px rgba(139, 92, 246, 0.5))' },
+                            '100%': { opacity: '1', filter: 'drop-shadow(0 0 30px rgba(192, 132, 252, 0.9))' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #090d16;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        .glass {
+            background: rgba(20, 24, 39, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        .glass-card {
+            background: linear-gradient(135deg, rgba(30, 27, 75, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(167, 139, 250, 0.15);
+        }
+        .glass-card:hover {
+            border-color: rgba(167, 139, 250, 0.4);
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.15);
+        }
+        .glow-bg {
+            background: radial-gradient(circle at 50% 20%, rgba(109, 40, 217, 0.25) 0%, rgba(15, 23, 42, 0) 70%);
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4c1d95;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6d28d9;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-emilia-500 selection:text-white">
+
+    <header class="fixed top-0 left-0 right-0 z-50 glass border-b border-emilia-900/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emilia-600 to-purple-400 p-0.5 shadow-lg shadow-emilia-600/30 animate-glow">
+                    <div class="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
+                        <i data-lucide="sparkles" class="w-6 h-6 text-purple-300"></i>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-xl font-bold tracking-wider bg-gradient-to-r from-white via-purple-200 to-emilia-400 bg-clip-text text-transparent">EMILIA MD</span>
+                    <span class="block text-xs font-medium text-purple-400 tracking-widest uppercase">WhatsApp Bot</span>
+                </div>
+            </div>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+                <a href="#hero" class="hover:text-purple-300 transition-colors">Home</a>
+                <a href="#pairing" class="hover:text-purple-300 transition-colors flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Pairing Code</a>
+                <a href="#features" class="hover:text-purple-300 transition-colors">Features</a>
+                <a href="#commands" class="hover:text-purple-300 transition-colors">Commands</a>
+                <a href="#status" class="hover:text-purple-300 transition-colors">Bot Status</a>
+            </nav>
+
+            <!-- CTA / Action -->
+            <div class="flex items-center space-x-4">
+                <a href="#pairing" class="hidden sm:inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-semibold text-sm text-white bg-gradient-to-r from-emilia-600 to-purple-500 hover:from-emilia-500 hover:to-purple-400 transition-all shadow-lg shadow-emilia-600/30 transform hover:-translate-y-0.5">
+                    <i data-lucide="zap" class="w-4 h-4 mr-2"></i> Connect Bot
+                </a>
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-xl text-slate-300 hover:bg-white/5">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden glass border-t border-emilia-900/40 px-4 pt-2 pb-6 space-y-3">
+            <a href="#hero" class="block py-2 text-slate-300 hover:text-purple-300">Home</a>
+            <a href="#pairing" class="block py-2 text-slate-300 hover:text-purple-300">Pairing Code</a>
+            <a href="#features" class="block py-2 text-slate-300 hover:text-purple-300">Features</a>
+            <a href="#commands" class="block py-2 text-slate-300 hover:text-purple-300">Commands</a>
+            <a href="#status" class="block py-2 text-slate-300 hover:text-purple-300">Bot Status</a>
+        </div>
+    </header>
+
+    <main class="flex-grow pt-28">
+        <section id="hero" class="relative min-h-[90vh] flex items-center justify-center py-20 glow-bg overflow-hidden">
+            <!-- Decorative background elements -->
+            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-700/15 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute top-1/3 left-10 w-72 h-72 bg-indigo-600/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute bottom-10 right-10 w-80 h-80 bg-emilia-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                <!-- Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border border-purple-500/30 text-purple-300 text-xs sm:text-sm font-medium mb-8 shadow-inner animate-fade-in">
+                    <span class="flex h-2 w-2 rounded-full bg-purple-400 animate-ping"></span>
+                    <span>Version 4.5.0 Stable • Powered by Baileys & Node.js</span>
+                </div>
+
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 max-w-4xl mx-auto leading-tight">
+                    Meet <span class="bg-gradient-to-r from-purple-300 via-emilia-400 to-indigo-300 bg-clip-text text-transparent drop-shadow-sm">Emilia MD</span>, Your Magical WhatsApp Assistant
+                </h1>
+
+                <p class="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+                    Experience crystal-clear speed, intelligent AI chat, lightning-fast media downloaders, and robust group management wrapped in an elegant Re:Zero interface.
+                </p>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                    <a href="#pairing" class="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-emilia-600 via-purple-600 to-indigo-600 hover:from-emilia-500 hover:to-indigo-500 shadow-xl shadow-emilia-600/30 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3">
+                        <i data-lucide="smartphone" class="w-5 h-5"></i> Get Pairing Code
+                    </a>
+                    <a href="#commands" class="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold text-slate-200 glass hover:bg-white/10 transition-all flex items-center justify-center gap-3 border border-purple-500/30">
+                        <i data-lucide="terminal" class="w-5 h-5 text-purple-400"></i> Explore Commands
+                    </a>
+                </div>
+
+                <!-- Live Stats Bar -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                    <div class="glass-card p-5 rounded-2xl text-left">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-semibold text-purple-300 uppercase tracking-wider">Bot Status</span>
+                            <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span class="text-xl font-bold text-white">ONLINE</span>
+                        </div>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl text-left">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-semibold text-purple-300 uppercase tracking-wider">Active Users</span>
+                            <i data-lucide="users" class="w-4 h-4 text-purple-400"></i>
+                        </div>
+                        <span class="text-2xl font-bold text-white" id="stat-users">48,291</span>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl text-left">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-semibold text-purple-300 uppercase tracking-wider">Commands Executed</span>
+                            <i data-lucide="cpu" class="w-4 h-4 text-indigo-400"></i>
+                        </div>
+                        <span class="text-2xl font-bold text-white" id="stat-cmds">1.4M+</span>
+                    </div>
+                    <div class="glass-card p-5 rounded-2xl text-left">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-semibold text-purple-300 uppercase tracking-wider">Uptime</span>
+                            <i data-lucide="clock" class="w-4 h-4 text-blue-400"></i>
+                        </div>
+                        <span class="text-2xl font-bold text-white" id="stat-uptime">99.9%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="pairing" class="py-24 relative">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-purple-600/20 text-purple-400 mb-4 border border-purple-500/30">
+                        <i data-lucide="key-round" class="w-6 h-6"></i>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold mb-3">WhatsApp Pairing Code Generator</h2>
+                    <p class="text-slate-400 max-w-xl mx-auto">Link your WhatsApp number to Emilia MD securely without scanning QR codes. Enter your phone number with country code.</p>
+                </div>
+
+                <div class="glass-card rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden border border-purple-500/30">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                    <form id="pairing-form" class="space-y-6 relative z-10">
+                        <div>
+                            <label for="phone-number" class="block text-sm font-medium text-purple-200 mb-2">WhatsApp Phone Number</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 font-medium">
+                                    +
+                                </div>
+                                <input type="text" id="phone-number" required placeholder="6281234567890" class="w-full pl-9 pr-4 py-4 rounded-2xl bg-slate-900/80 border border-purple-500/30 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all">
+                            </div>
+                            <p class="text-xs text-slate-400 mt-2">Example: 6281234567890 (without spaces or symbols)</p>
+                        </div>
+
+                        <button type="submit" id="generate-btn" class="w-full py-4 rounded-2xl font-bold text-white bg-gradient-to-r from-emilia-600 via-purple-600 to-indigo-600 hover:from-emilia-500 hover:to-indigo-500 shadow-lg shadow-emilia-600/30 transition-all flex items-center justify-center gap-2">
+                            <span id="btn-text">Generate 8-Digit Pairing Code</span>
+                            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </button>
+                    </form>
+
+                    <!-- Result Box (Hidden by default) -->
+                    <div id="pairing-result" class="hidden mt-8 pt-8 border-t border-purple-500/20 text-center animate-fade-in">
+                        <p class="text-sm font-medium text-purple-300 mb-3">Your Secure Pairing Code:</p>
+                        <div class="inline-flex items-center justify-center gap-4 bg-slate-950 px-8 py-5 rounded-2xl border border-purple-500/40 shadow-inner">
+                            <span id="code-display" class="text-3xl sm:text-4xl font-mono font-black tracking-widest text-white">EMILIA-9X</span>
+                            <button id="copy-code-btn" title="Copy Code" class="p-3 rounded-xl bg-purple-600/20 text-purple-300 hover:bg-purple-600/40 transition-colors">
+                                <i data-lucide="copy" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4">Open WhatsApp on your phone > Linked Devices > Link a Device > Link with phone number instead, and enter this code.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="py-24 bg-slate-950/50 border-y border-purple-900/30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-purple-400 mb-2 block">Powerful Capabilities</span>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold mb-4">Designed for Speed & Magic</h2>
+                    <p class="text-slate-400">Packed with cutting-edge modules to make your WhatsApp experience effortless and fun.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="glass-card p-8 rounded-3xl transition-all duration-300 hover:-translate-y-1">
+                        <div class="w-14 h-14 rounded-2xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-6">
+                            <i data-lucide="bot" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-white">Advanced AI Chat</h3>
+                        <p class="text-slate-400 leading-relaxed">Powered by state-of-the-art language models. Chat naturally with Emilia, ask questions, write code, or translate text instantly.</p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="glass-card p-8 rounded-3xl transition-all duration-300 hover:-translate-y-1">
+                        <div class="w-14 h-14 rounded-2xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 mb-6">
+                            <i data-lucide="download" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-white">Universal Downloader</h3>
+                        <p class="text-slate-400 leading-relaxed">Download videos, reels, and music from TikTok, Instagram, YouTube, and Facebook instantly without annoying watermarks.</p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="glass-card p-8 rounded-3xl transition-all duration-300 hover:-translate-y-1">
+                        <div class="w-14 h-14 rounded-2xl bg-pink-600/20 border border-pink-500/30 flex items-center justify-center text-pink-400 mb-6">
+                            <i data-lucide="shield-check" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-white">Group Administration</h3>
+                        <p class="text-slate-400 leading-relaxed">Keep your groups safe with automated anti-link, kick/ban commands, welcome greetings, open/close group schedules, and warning systems.</p>
+                    </div>
+
+                    <!-- Feature 4 -->
+                    <div class="glass-card p-8 rounded-3xl transition-all duration-300 hover:-translate-y-1">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-6">
+                            <i data-lucide="wand-2" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-white">Sticker & Anime Tools</h3>
+                        <p class="text-slate-400 leading-relaxed">Convert images into animated or static WhatsApp stickers instantly. Search for anime character quotes, wallpapers, and episode details.</p>
+                    </div>
+
+                    <!-- Feature 5 -->
+                    <div class="glass-card p-8 rounded-3xl transition-all duration-300 hover:-translate-y-1">
+                        <div class="w-14 h-14 rounded-2xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 mb-6">
+                            <i data-lucide="cpu" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-white">99.9% Uptime Hosting</h3>
+                        <p class="text-slate-400 leading-relaxed">Hosted on robust cloud infrastructure ensuring your bot stays online 24/7 without unexpected downtime or disconnection.</p>
+                    </div>
+
+                    <!-- Feature 6 -->
+                    <div class="glass-card p-8 rounded-3xl transition-all duration-300 hover:-translate-y-1">
+                        <div class="w-14 h-14 rounded-2xl bg-amber-600/20 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-6">
+                            <i data-lucide="terminal" class="w-7 h-7"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 text-white">Custom Plugin Support</h3>
+                        <p class="text-slate-400 leading-relaxed">Easily extensible architecture allowing developers to add custom JavaScript/TypeScript plugins and API integrations.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="commands" class="py-24">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-purple-400 mb-2 block">Command Directory</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">Interactive Command Menu</h2>
+                    <p class="text-slate-400 max-w-xl mx-auto">Search through hundreds of available commands for Emilia MD.</p>
+                </div>
+
+                <!-- Search Input Bar -->
+                <div class="relative max-w-2xl mx-auto mb-10">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-purple-400">
+                        <i data-lucide="search" class="w-5 h-5"></i>
+                    </div>
+                    <input type="text" id="command-search" placeholder="Search command (e.g. ai, tiktok, sticker, kick)..." class="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-900 border border-purple-500/30 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all">
+                </div>
+
+                <!-- Command Categories Filter -->
+                <div class="flex flex-wrap items-center justify-center gap-2 mb-10" id="cmd-filters">
+                    <button data-filter="all" class="px-5 py-2 rounded-xl text-sm font-semibold bg-purple-600 text-white transition-all shadow-md">All</button>
+                    <button data-filter="ai" class="px-5 py-2 rounded-xl text-sm font-medium bg-white/5 text-slate-300 hover:bg-white/10 transition-all border border-purple-500/20">AI & Chat</button>
+                    <button data-filter="downloader" class="px-5 py-2 rounded-xl text-sm font-medium bg-white/5 text-slate-300 hover:bg-white/10 transition-all border border-purple-500/20">Downloader</button>
+                    <button data-filter="group" class="px-5 py-2 rounded-xl text-sm font-medium bg-white/5 text-slate-300 hover:bg-white/10 transition-all border border-purple-500/20">Group Admin</button>
+                    <button data-filter="anime" class="px-5 py-2 rounded-xl text-sm font-medium bg-white/5 text-slate-300 hover:bg-white/10 transition-all border border-purple-500/20">Anime & Fun</button>
+                </div>
+
+                <!-- Command List Container -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="command-list">
+                    <!-- Cmd Item -->
+                    <div class="glass-card p-5 rounded-2xl flex items-start justify-between command-item" data-category="ai" data-name=".ai">
+                        <div>
+                            <div class="flex items-center gap-3 mb-1">
+                                <span class="font-mono font-bold text-purple-300 text-lg">.ai</span>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-600/30 text-purple-300 border border-purple-500/20">AI</span>
+                            </div>
+                            <p class="text-sm text-slate-400">Chat with Emilia AI assistant using advanced intelligence.</p>
+                        </div>
+                        <button class="copy-cmd text-xs px-3 py-1.5 rounded-lg bg-white/5 hover:bg-purple-600/20 text-slate-300 transition-colors border border-purple-500/20" data-cmd=".ai">Copy</button>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-2xl flex items-start justify-between command-item" data-category="downloader" data-name=".tiktok">
+                        <div>
+                            <div class="flex items-center gap-3 mb-1">
+                                <span class="font-mono font-bold text-purple-300 text-lg">.tiktok</span>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-600/30 text-indigo-300 border border-indigo-500/20">Downloader</span>
+                            </div>
+                            <p class="text-sm text-slate-400">Download TikTok videos without watermark by providing URL.</p>
+                        </div>
+                        <button class="copy-cmd text-xs px-3 py-1.5 rounded-lg bg-white/5 hover:bg-purple-600/20 text-slate-300 transition-colors border border-purple-500/20" data-cmd=".tiktok">Copy</button>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-2xl flex items-start justify-between command-item" data-category="downloader" data-name=".play">
+                        <div>
+                            <div class="flex items-center gap-3 mb-1">
+                                <span class="font-mono font-bold text-purple-300 text-lg">.play</span>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-600/30 text-indigo-300 border border-indigo-500/20">Downloader</span>
+                            </div>
+                            <p class="text-sm text-slate-400">Search and stream audio/songs from YouTube directly on chat.</p>
+                        </div>
+                        <button class="copy-cmd text-xs px-3 py-1.5 rounded-lg bg-white/5 hover:bg-purple-600/20 text-slate-300 transition-colors border border-purple-500/20" data-cmd=".play">Copy</button>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-2xl flex items-start justify-between command-item" data-category="group" data-name=".kick">
+                        <div>
+                            <div class="flex items-center gap-3 mb-1">
+                                <span class="font-mono font-bold text-purple-300 text-lg">.kick</span>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-pink-600/30 text-pink-300 border border-pink-500/20">Group</span>
+                            </div>
+                            <p class="text-sm text-slate-400">Remove a troublesome member from the WhatsApp group (Admin only).</p>
+                        </div>
+                        <button class="copy-cmd text-xs px-3 py-1.5 rounded-lg bg-white/5 hover:bg-purple-600/20 text-slate-300 transition-colors border border-purple-500/20" data-cmd=".kick">Copy</button>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-2xl flex items-start justify-between command-item" data-category="group" data-name=".hidetag">
+                        <div>
+                            <div class="flex items-center gap-3 mb-1">
+                                <span class="font-mono font-bold text-purple-300 text-lg">.hidetag</span>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-pink-600/30 text-pink-300 border border-pink-500/20">Group</span>
+                            </div>
+                            <p class="text-sm text-slate-400">Mention all group members covertly with an important announcement.</p>
+                        </div>
+                        <button class="copy-cmd text-xs px-3 py-1.5 rounded-lg bg-white/5 hover:bg-purple-600/20 text-slate-300 transition-colors border border-purple-500/20" data-cmd=".hidetag">Copy</button>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-2xl flex items-start justify-between command-item" data-category="anime" data-name=".sticker">
+                        <div>
+                            <div class="flex items-center gap-3 mb-1">
+                                <span class="font-mono font-bold text-purple-300 text-lg">.sticker</span>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-600/30 text-emerald-300 border border-emerald-500/20">Anime & Fun</span>
+                            </div>
+                            <p class="text-sm text-slate-400">Convert any image or short video reply into a WhatsApp sticker.</p>
+                        </div>
+                        <button class="copy-cmd text-xs px-3 py-1.5 rounded-lg bg-white/5 hover:bg-purple-600/20 text-slate-300 transition-colors border border-purple-500/20" data-cmd=".sticker">Copy</button>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-2xl flex items-start justify-between command-item" data-category="anime" data-name=".waifu">
+                        <div>
+                            <div class="flex items-center gap-3 mb-1">
+                                <span class="font-mono font-bold text-purple-300 text-lg">.waifu</span>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-600/30 text-emerald-300 border border-emerald-500/20">Anime & Fun</span>
+                            </div>
+                            <p class="text-sm text-slate-400">Get random gorgeous anime waifu image directly in your chat.</p>
+                        </div>
+                        <button class="copy-cmd text-xs px-3 py-1.5 rounded-lg bg-white/5 hover:bg-purple-600/20 text-slate-300 transition-colors border border-purple-500/20" data-cmd=".waifu">Copy</button>
+                    </div>
+
+                    <div class="glass-card p-5 rounded-2xl flex items-start justify-between command-item" data-category="ai" data-name=".gemini">
+                        <div>
+                            <div class="flex items-center gap-3 mb-1">
+                                <span class="font-mono font-bold text-purple-300 text-lg">.gemini</span>
+                                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-600/30 text-purple-300 border border-purple-500/20">AI</span>
+                            </div>
+                            <p class="text-sm text-slate-400">Consult Gemini multimodal AI for advanced problem solving and analysis.</p>
+                        </div>
+                        <button class="copy-cmd text-xs px-3 py-1.5 rounded-lg bg-white/5 hover:bg-purple-600/20 text-slate-300 transition-colors border border-purple-500/20" data-cmd=".gemini">Copy</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="status" class="py-24 bg-slate-950/70 border-t border-purple-900/30">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <span class="text-xs font-semibold uppercase tracking-widest text-purple-400 mb-2 block">System Diagnostics</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">Live Server & Bot Health</h2>
+                    <p class="text-slate-400">Real-time telemetry of Emilia MD's core worker cluster.</p>
+                </div>
+
+                <div class="glass-card rounded-3xl p-8 border border-purple-500/30 space-y-6">
+                    <div class="flex items-center justify-between pb-6 border-b border-purple-500/20">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-2xl bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                                <i data-lucide="server" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white text-lg">Main Cluster #1 (Singapore)</h4>
+                                <p class="text-xs text-slate-400">Connected to WhatsApp Web Gateway</p>
+                            </div>
+                        </div>
+                        <span class="px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Operational
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                        <div class="bg-slate-900/60 p-5 rounded-2xl border border-purple-500/10">
+                            <span class="text-xs font-medium text-purple-300 block mb-1">Latency (Ping)</span>
+                            <span class="text-2xl font-bold text-white" id="live-ping">42 ms</span>
+                        </div>
+                        <div class="bg-slate-900/60 p-5 rounded-2xl border border-purple-500/10">
+                            <span class="text-xs font-medium text-purple-300 block mb-1">Memory Usage</span>
+                            <span class="text-2xl font-bold text-white">384 MB / 2 GB</span>
+                        </div>
+                        <div class="bg-slate-900/60 p-5 rounded-2xl border border-purple-500/10">
+                            <span class="text-xs font-medium text-purple-300 block mb-1">Active Sessions</span>
+                            <span class="text-2xl font-bold text-white">1,248</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex items-center justify-between">
+                        <p class="text-xs text-slate-400">Last synchronized: Just now</p>
+                        <button id="restart-sim-btn" class="px-4 py-2 rounded-xl text-xs font-semibold bg-purple-600/20 hover:bg-purple-600/40 text-purple-300 transition-colors border border-purple-500/30 flex items-center gap-2">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Refresh Telemetry
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-32 opacity-0 transition-all duration-300 glass bg-slate-900/90 border border-purple-500/40 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3">
+        <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400"></i>
+        <span id="toast-msg" class="text-sm font-medium">Action completed successfully!</span>
+    </div>
+
+    <footer class="glass border-t border-purple-900/40 py-12 text-center relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emilia-600 to-purple-400 p-0.5">
+                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+                        <i data-lucide="sparkles" class="w-4 h-4 text-purple-300"></i>
+                    </div>
+                </div>
+                <span class="text-lg font-bold tracking-wider text-white">EMILIA MD</span>
+            </div>
+            <p class="text-sm text-slate-400">
+                © 2026 Emilia MD WhatsApp Bot. Inspired by Re:Zero. Built with passion & Tailwind CSS.
+            </p>
+            <div class="flex items-center space-x-4 text-slate-400">
+                <a href="https://github.com" target="_blank" class="hover:text-purple-300 transition-colors"><i data-lucide="github" class="w-5 h-5"></i></a>
+                <a href="https://telegram.org" target="_blank" class="hover:text-purple-300 transition-colors"><i data-lucide="send" class="w-5 h-5"></i></a>
+                <a href="https://whatsapp.com" target="_blank" class="hover:text-purple-300 transition-colors"><i data-lucide="message-circle" class="w-5 h-5"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Toast Helper
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            toastMsg.textContent = message;
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-32', 'opacity-0');
+            }, 3000);
+        }
+
+        // Pairing Code Generator Simulation
+        const pairingForm = document.getElementById('pairing-form');
+        const pairingResult = document.getElementById('pairing-result');
+        const codeDisplay = document.getElementById('code-display');
+        const copyCodeBtn = document.getElementById('copy-code-btn');
+        const generateBtn = document.getElementById('generate-btn');
+
+        pairingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const phoneInput = document.getElementById('phone-number').value.trim();
+            if (phoneInput.length < 10) {
+                showToast('Please enter a valid phone number with country code!');
+                return;
+            }
+
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin mr-2"></i> Generating Code...';
+            lucide.createIcons();
+
+            setTimeout(() => {
+                // Generate random 8-char code
+                const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+                let code = 'EMILIA-';
+                for (let i = 0; i < 4; i++) {
+                    code += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                codeDisplay.textContent = code;
+                pairingResult.classList.remove('hidden');
+                generateBtn.disabled = false;
+                generateBtn.innerHTML = '<span id="btn-text">Generate 8-Digit Pairing Code</span><i data-lucide="arrow-right" class="w-5 h-5"></i>';
+                lucide.createIcons();
+                showToast('Pairing code generated successfully!');
+                pairingResult.scrollIntoView({ behavior: 'smooth' });
+            }, 1200);
+        });
+
+        copyCodeBtn.addEventListener('click', () => {
+            const codeText = codeDisplay.textContent;
+            const textarea = document.createElement('textarea');
+            textarea.value = codeText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            showToast('Pairing code copied to clipboard!');
+        });
+
+        // Command Search and Filter
+        const commandSearch = document.getElementById('command-search');
+        const cmdFilters = document.querySelectorAll('#cmd-filters button');
+        const commandItems = document.querySelectorAll('.command-item');
+
+        let currentCategory = 'all';
+
+        commandSearch.addEventListener('input', (e) => {
+            filterCommands();
+        });
+
+        cmdFilters.forEach(btn => {
+            btn.addEventListener('click', () => {
+                cmdFilters.forEach(b => {
+                    b.classList.remove('bg-purple-600', 'text-white', 'shadow-md');
+                    b.classList.add('bg-white/5', 'text-slate-300', 'border', 'border-purple-500/20');
+                });
+                btn.classList.add('bg-purple-600', 'text-white', 'shadow-md');
+                btn.classList.remove('bg-white/5', 'text-slate-300', 'border', 'border-purple-500/20');
+                currentCategory = btn.getAttribute('data-filter');
+                filterCommands();
+            });
+        });
+
+        function filterCommands() {
+            const query = commandSearch.value.toLowerCase().trim();
+            commandItems.forEach(item => {
+                const category = item.getAttribute('data-category');
+                const name = item.getAttribute('data-name').toLowerCase();
+                const text = item.textContent.toLowerCase();
+
+                const matchesCategory = (currentCategory === 'all' || category === currentCategory);
+                const matchesQuery = (name.includes(query) || text.includes(query));
+
+                if (matchesCategory && matchesQuery) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Copy individual command
+        document.querySelectorAll('.copy-cmd').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const cmd = btn.getAttribute('data-cmd');
+                const textarea = document.createElement('textarea');
+                textarea.value = cmd;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast(`Command "${cmd}" copied!`);
+            });
+        });
+
+        // Telemetry Refresh Simulation
+        const restartSimBtn = document.getElementById('restart-sim-btn');
+        const livePing = document.getElementById('live-ping');
+        restartSimBtn.addEventListener('click', () => {
+            restartSimBtn.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin mr-1"></i> Refreshing...';
+            lucide.createIcons();
+            setTimeout(() => {
+                const randomPing = Math.floor(Math.random() * 25) + 30;
+                livePing.textContent = randomPing + ' ms';
+                restartSimBtn.innerHTML = '<i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Refresh Telemetry';
+                lucide.createIcons();
+                showToast('Telemetry data refreshed successfully!');
+            }, 800);
+        });
+    </script>
+</body>
+</html>
